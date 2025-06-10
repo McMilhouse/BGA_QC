@@ -1,21 +1,17 @@
-# Environnements virtuels
+# Environnement virtuel
 .venv/
-env/
+venv/
 
-# Fichiers compilés Python
+# Cache Python
 __pycache__/
 *.pyc
-*.pyo
-*.pyd
 
-# Dossiers cache
-*.egg-info/
-dist/
-build/
+# Fichiers IDE
+.idea/
+.vscode/
 
-# Fichiers de logs
+# Logs
 *.log
 
-# Configuration IDE (exemples)
-.vscode/
-.idea/
+# Dossier Images (tu peux l'inclure si tu veux versionner les images)
+# Sinon ajoute Images/ si tu veux l'exclure

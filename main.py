@@ -4,20 +4,18 @@ import os
 import streamlit as st
 import pandas as pd
 
-
 @st.cache_data
 def load_data():
     try:
-        # Calcul du chemin absolu vers le fichier CSV, basé sur l'emplacement du script
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        csv_path = os.path.join(base_dir, "data", "BGA.csv")
+        import time
+        timestamp = int(time.time())  # bust GitHub cache
 
-        df = pd.read_csv(csv_path, encoding="utf-8")
+        csv_url = f"https://raw.githubusercontent.com/Mcmilhouse/BGA_QC/main/data/BGA.csv?nocache={timestamp}"
+        df = pd.read_csv(csv_url)
         return df
-    except FileNotFoundError:
-        st.error(f"Fichier {csv_path} non trouvé. Vérifie le chemin.")
+    except Exception as e:
+        st.error(f"Erreur lors du chargement du fichier depuis GitHub : {e}")
         return None
-
 
 df = load_data()
 

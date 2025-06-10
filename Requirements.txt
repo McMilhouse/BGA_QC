@@ -1,3 +1,4 @@
-Streamlit
-Pandas
-Pillow
+gspread
+oauth2client
+pandas
+streamlit

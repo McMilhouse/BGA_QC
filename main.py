@@ -1,19 +1,26 @@
+PROGRAM_NAME = "les statistiques des tournois BGA"
+
+import os
 import streamlit as st
 import pandas as pd
 
-PROGRAM_NAME = "les statistiques des tournois BGA"
 
-# Chargement du CSV
 @st.cache_data
 def load_data():
     try:
-        df = pd.read_csv("data/BGA.csv", encoding="utf-8")
+        # Calcul du chemin absolu vers le fichier CSV, basé sur l'emplacement du script
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        csv_path = os.path.join(base_dir, "data", "BGA.csv")
+
+        df = pd.read_csv(csv_path, encoding="utf-8")
         return df
     except FileNotFoundError:
-        st.error("Fichier data/BGA.csv non trouvé. Vérifie le chemin.")
+        st.error(f"Fichier {csv_path} non trouvé. Vérifie le chemin.")
         return None
 
+
 df = load_data()
+
 st.title(PROGRAM_NAME)
 
 if df is not None:

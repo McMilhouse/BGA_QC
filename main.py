@@ -12,6 +12,9 @@ def load_data():
 
         csv_url = f"https://raw.githubusercontent.com/Mcmilhouse/BGA_QC/main/data/BGA.csv?nocache={timestamp}"
         df = pd.read_csv(csv_url)
+
+        # Nettoie les noms de colonnes (supprime les espaces avant/après)
+        df.columns = df.columns.str.strip()
         return df
     except Exception as e:
         st.error(f"Erreur lors du chargement du fichier depuis GitHub : {e}")

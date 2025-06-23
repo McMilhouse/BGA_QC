@@ -29,21 +29,25 @@ def charger_feuille(gid):
         return pd.DataFrame()
 
 def chercher_places_suisse(df, pseudo):
-    places = {"1er": 1, "2e": 2, "3e": 3}
+    places = ["1er", "2e", "3e"]
     resultats = {1: [], 2: [], 3: []}
-    for col, place in places.items():
-        mask = df[col].str.lower() == pseudo
-        jeux = df.loc[mask, "jeu"].tolist()
-        resultats[place].extend(jeux)
+    pseudo = pseudo.lower()
+    for idx, col in enumerate(places, 1):
+        if col in df.columns:
+            mask = df[col].apply(lambda x: pseudo in [p.strip().lower() for p in str(x).split('/')])
+            jeux = df.loc[mask, "jeu"].tolist()
+            resultats[idx].extend(jeux)
     return resultats
 
 def chercher_resultats_double(df, pseudo):
     colonnes = {"gagnant(e)": "Gagnant", "finaliste(s)": "Finaliste", "semi-finaliste(s)": "Demi-finaliste"}
     resultats = {v: [] for v in colonnes.values()}
+    pseudo = pseudo.lower()
     for col, nom_resultat in colonnes.items():
-        mask = df[col].str.lower() == pseudo
-        jeux = df.loc[mask, "jeu"].tolist()
-        resultats[nom_resultat].extend(jeux)
+        if col in df.columns:
+            mask = df[col].apply(lambda x: pseudo in [p.strip().lower() for p in str(x).split('/')])
+            jeux = df.loc[mask, "jeu"].tolist()
+            resultats[nom_resultat].extend(jeux)
     return resultats
 
 st.title(PROGRAM_NAME)
@@ -68,45 +72,6 @@ if pseudo:
 
     df_suisse = charger_feuille(gid=0)
     df_elim = charger_feuille(gid=344099596)
-
-def verifier_presence_pseudo(df, pseudo, colonnes):
-    pseudo = pseudo.lower()
-    lignes_trouvees = []
-    for col in colonnes:
-        if col in df.columns:
-            # Cherche les lignes où la colonne contient le pseudo (insensible à la casse)
-            mask = df[col].astype(str).str.lower().str.contains(pseudo)
-            df_filtree = df.loc[mask, ["jeu", col]]
-            if not df_filtree.empty:
-                for _, row in df_filtree.iterrows():
-                    lignes_trouvees.append((col, row["jeu"], row[col]))
-    return lignes_trouvees
-
-if pseudo:
-    st.subheader("Vérification de la présence du pseudo dans les colonnes clés")
-
-    df_suisse = charger_feuille(gid=0)
-    colonnes_suisse = ["1er", "2e", "3e"]
-
-    resultats_suisse = verifier_presence_pseudo(df_suisse, pseudo, colonnes_suisse)
-    if resultats_suisse:
-        st.write("Pseudo trouvé dans mode Suisse :")
-        for col, jeu, val in resultats_suisse:
-            st.write(f"- Colonne **{col}**, Jeu : {jeu}, Valeur trouvée : {val}")
-    else:
-        st.write("Pseudo non trouvé dans mode Suisse dans les colonnes 1er, 2e, 3e.")
-
-    df_elim = charger_feuille(gid=344099596)
-    colonnes_elim = ["gagnant(e)", "finaliste(s)", "semi-finaliste(s)"]
-
-    resultats_elim = verifier_presence_pseudo(df_elim, pseudo, colonnes_elim)
-    if resultats_elim:
-        st.write("Pseudo trouvé dans mode Double élimination :")
-        for col, jeu, val in resultats_elim:
-            st.write(f"- Colonne **{col}**, Jeu : {jeu}, Valeur trouvée : {val}")
-    else:
-        st.write("Pseudo non trouvé dans mode Double élimination dans les colonnes gagnant(e), finaliste(s), demi-finaliste(s).")
-
 
     st.subheader("Mode Suisse")
     if not df_suisse.empty:

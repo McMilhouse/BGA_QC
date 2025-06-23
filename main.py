@@ -69,6 +69,45 @@ if pseudo:
     df_suisse = charger_feuille(gid=0)
     df_elim = charger_feuille(gid=344099596)
 
+def verifier_presence_pseudo(df, pseudo, colonnes):
+    pseudo = pseudo.lower()
+    lignes_trouvees = []
+    for col in colonnes:
+        if col in df.columns:
+            # Cherche les lignes où la colonne contient le pseudo (insensible à la casse)
+            mask = df[col].astype(str).str.lower().str.contains(pseudo)
+            df_filtree = df.loc[mask, ["jeu", col]]
+            if not df_filtree.empty:
+                for _, row in df_filtree.iterrows():
+                    lignes_trouvees.append((col, row["jeu"], row[col]))
+    return lignes_trouvees
+
+if pseudo:
+    st.subheader("Vérification de la présence du pseudo dans les colonnes clés")
+
+    df_suisse = charger_feuille(gid=0)
+    colonnes_suisse = ["1er", "2e", "3e"]
+
+    resultats_suisse = verifier_presence_pseudo(df_suisse, pseudo, colonnes_suisse)
+    if resultats_suisse:
+        st.write("Pseudo trouvé dans mode Suisse :")
+        for col, jeu, val in resultats_suisse:
+            st.write(f"- Colonne **{col}**, Jeu : {jeu}, Valeur trouvée : {val}")
+    else:
+        st.write("Pseudo non trouvé dans mode Suisse dans les colonnes 1er, 2e, 3e.")
+
+    df_elim = charger_feuille(gid=344099596)
+    colonnes_elim = ["gagnant(e)", "finaliste(s)", "semi-finaliste(s)"]
+
+    resultats_elim = verifier_presence_pseudo(df_elim, pseudo, colonnes_elim)
+    if resultats_elim:
+        st.write("Pseudo trouvé dans mode Double élimination :")
+        for col, jeu, val in resultats_elim:
+            st.write(f"- Colonne **{col}**, Jeu : {jeu}, Valeur trouvée : {val}")
+    else:
+        st.write("Pseudo non trouvé dans mode Double élimination dans les colonnes gagnant(e), finaliste(s), demi-finaliste(s).")
+
+
     st.subheader("Mode Suisse")
     if not df_suisse.empty:
         resultats_suisse = chercher_places_suisse(df_suisse, pseudo)

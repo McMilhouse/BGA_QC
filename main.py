@@ -22,8 +22,6 @@ def charger_feuille(gid):
     try:
         df = pd.read_csv(url)
         df.columns = df.columns.str.strip().str.lower()
-        # Ligne suivante supprimée pour ne pas afficher les colonnes chargées
-        # st.write(f"Colonnes chargées pour gid={gid} :", df.columns.tolist())
         return df
     except Exception as e:
         st.error(f"Erreur chargement feuille gid={gid}: {e}")
@@ -77,11 +75,12 @@ if pseudo:
     st.subheader("Mode Suisse")
     if not df_suisse.empty:
         resultats_suisse = chercher_places_suisse(df_suisse, pseudo)
+        emojis = {1:"🥇", 2:"🥈", 3:"🥉"}
+        positions_texte = {1: "1ère position", 2: "2e position", 3: "3e position"}
         for place in [1, 2, 3]:
             jeux = resultats_suisse[place]
             if jeux:
-                emojis = {1:"🥇", 2:"🥈", 3:"🥉"}
-                st.write(f"{emojis[place]} Position {place} à : {', '.join(jeux)}")
+                st.write(f"{emojis[place]} {positions_texte[place]} à : {', '.join(jeux)}")
         if not any(resultats_suisse.values()):
             st.info("Pas de résultats trouvés en mode suisse.")
     else:

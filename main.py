@@ -56,6 +56,7 @@ if pseudo:
     df_elim = charger_feuille(gid=344099596)
 
     # Filtrer par pseudo
+    st.write("Colonnes dans df_suisse :", df_suisse.columns.tolist())
     df_suisse_joueur = df_suisse[df_suisse["Joueur"].str.lower() == pseudo]
     df_elim_joueur = df_elim[df_elim["Joueur"].str.lower() == pseudo]
 

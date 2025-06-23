@@ -4,22 +4,39 @@ import os
 import streamlit as st
 import pandas as pd
 
+# --- Chargement des données principales depuis GitHub ---
 @st.cache_data
 def load_data():
     try:
         import time
-        timestamp = int(time.time())  # bust GitHub cache
+        timestamp = int(time.time())  # évite le cache GitHub
 
         csv_url = f"https://raw.githubusercontent.com/Mcmilhouse/BGA_QC/main/data/BGA.csv?nocache={timestamp}"
         df = pd.read_csv(csv_url)
 
-        # Nettoie les noms de colonnes (supprime les espaces avant/après)
         df.columns = df.columns.str.strip()
         return df
     except Exception as e:
         st.error(f"Erreur lors du chargement du fichier depuis GitHub : {e}")
         return None
 
+# --- Chargement dynamique des noms de jeux depuis Google Sheets ---
+@st.cache_data
+def charger_liste_jeux(mode="Suisse"):
+    try:
+        if mode == "Suisse":
+            url_jeux = "https://docs.google.com/spreadsheets/d/1JEf5uE3lAwqiRCgVQTuQ3CCoqYtshTSaIUp3S49BG5w/export?format=csv&gid=0"
+        else:
+            url_jeux = "https://docs.google.com/spreadsheets/d/1JEf5uE3lAwqiRCgVQTuQ3CCoqYtshTSaIUp3S49BG5w/export?format=csv&gid=344099596"
+        
+        jeux_df = pd.read_csv(url_jeux)
+        liste_jeux = jeux_df.iloc[:, 0].dropna().unique().tolist()
+        return liste_jeux
+    except Exception as e:
+        st.error(f"Erreur de chargement des jeux : {e}")
+        return []
+
+# --- Application principale ---
 df = load_data()
 
 st.title(PROGRAM_NAME)
@@ -81,7 +98,33 @@ if df is not None:
                 f"{ligne_quart}"
             )
             st.text(texte_resultat)
+
+            # --- NOUVELLE SECTION : Associer des jeux à ses performances ---
+            st.markdown("---")
+            st.subheader("Associer des jeux à tes meilleures positions")
+
+            mode_choisi = st.radio("Quel mode veux-tu annoter ?", ["Mode Suisse", "Double élimination"])
+            liste_jeux = charger_liste_jeux(mode=mode_choisi)
+
+            if mode_choisi == "Mode Suisse":
+                jeu_1er = st.selectbox("Jeu où tu as terminé 1er", options=liste_jeux)
+                jeu_2e = st.selectbox("Jeu où tu as terminé 2e", options=liste_jeux)
+                jeu_3e = st.selectbox("Jeu où tu as terminé 3e", options=liste_jeux)
+
+                if st.button("Valider", key="valide_suisse"):
+                    st.success(f"🥇 1er : {jeu_1er}\n🥈 2e : {jeu_2e}\n🥉 3e : {jeu_3e}")
+
+            elif mode_choisi == "Double élimination":
+                jeu_victoire = st.selectbox("Jeu remporté", options=liste_jeux)
+                jeu_finale = st.selectbox("Jeu en finale", options=liste_jeux)
+                jeu_demi1 = st.selectbox("1er jeu en demi-finale", options=liste_jeux)
+                jeu_demi2 = st.selectbox("2e jeu en demi-finale", options=liste_jeux)
+
+                if st.button("Valider", key="valide_double"):
+                    st.success(f"🏆 Gagnant : {jeu_victoire}\n🥈 Finaliste : {jeu_finale}\n🏅 Demi-finales : {jeu_demi1}, {jeu_demi2}")
+
         else:
             st.warning("Pseudo non trouvé ou mal orthographié !")
 else:
     st.error("Impossible de charger les données.")
+

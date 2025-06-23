@@ -28,8 +28,8 @@ def charger_feuille(gid):
         return pd.DataFrame()
 
 def chercher_places_suisse(df, pseudo):
-    places = ["1er", "2e", "3e"]
-    resultats = {1: [], 2: [], 3: []}
+    places = ["1er", "2e", "3e", "4e", "5e", "6e", "7e", "8e"]
+    resultats = {i: [] for i in range(1, 9)}
     pseudo = pseudo.lower()
     for idx, col in enumerate(places, 1):
         if col in df.columns:
@@ -39,7 +39,12 @@ def chercher_places_suisse(df, pseudo):
     return resultats
 
 def chercher_resultats_double(df, pseudo):
-    colonnes = {"gagnant(e)": "Gagnant", "finaliste(s)": "Finaliste", "semi-finaliste(s)": "Demi-finaliste"}
+    colonnes = {
+        "gagnant(e)": "Gagnant",
+        "finaliste(s)": "Finaliste",
+        "semi-finaliste(s)": "Demi-finaliste",
+        "quart-finaliste(s)": "Quart-finaliste"
+    }
     resultats = {v: [] for v in colonnes.values()}
     pseudo = pseudo.lower()
     for col, nom_resultat in colonnes.items():
@@ -75,12 +80,25 @@ if pseudo:
     st.subheader("Mode Suisse")
     if not df_suisse.empty:
         resultats_suisse = chercher_places_suisse(df_suisse, pseudo)
-        emojis = {1:"🥇", 2:"🥈", 3:"🥉"}
-        positions_texte = {1: "1ère position", 2: "2e position", 3: "3e position"}
-        for place in [1, 2, 3]:
+        emojis_suisse = {
+            1:"🥇", 2:"🥈", 3:"🥉",
+            4:"4️⃣", 5:"5️⃣", 6:"6️⃣",
+            7:"7️⃣", 8:"8️⃣"
+        }
+        positions_texte_suisse = {
+            1: "1ère position",
+            2: "2e position",
+            3: "3e position",
+            4: "4e position",
+            5: "5e position",
+            6: "6e position",
+            7: "7e position",
+            8: "8e position"
+        }
+        for place in range(1, 9):
             jeux = resultats_suisse[place]
             if jeux:
-                st.write(f"{emojis[place]} {positions_texte[place]} à : {', '.join(jeux)}")
+                st.write(f"{emojis_suisse[place]} {positions_texte_suisse[place]} à : {', '.join(jeux)}")
         if not any(resultats_suisse.values()):
             st.info("Pas de résultats trouvés en mode suisse.")
     else:
@@ -89,10 +107,15 @@ if pseudo:
     st.subheader("Double élimination")
     if not df_elim.empty:
         resultats_elim = chercher_resultats_double(df_elim, pseudo)
+        emojis_elim = {
+            "Gagnant":"🏆",
+            "Finaliste":"🎯",
+            "Demi-finaliste":"🏅",
+            "Quart-finaliste":"🔶"
+        }
         for nom, jeux in resultats_elim.items():
             if jeux:
-                emojis = {"Gagnant":"🏆", "Finaliste":"🎯", "Demi-finaliste":"🏅"}
-                st.write(f"{emojis[nom]} {nom} à : {', '.join(jeux)}")
+                st.write(f"{emojis_elim[nom]} {nom} à : {', '.join(jeux)}")
         if not any(resultats_elim.values()):
             st.info("Pas de résultats trouvés en double élimination.")
     else:

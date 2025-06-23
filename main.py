@@ -23,11 +23,28 @@ def charger_feuille(gid):
         df = pd.read_csv(url)
         df.columns = df.columns.str.strip().str.lower()
         st.write(f"Colonnes chargées pour gid={gid} :", df.columns.tolist())
-        st.write(df.head())
         return df
     except Exception as e:
         st.error(f"Erreur chargement feuille gid={gid}: {e}")
         return pd.DataFrame()
+
+def chercher_places_suisse(df, pseudo):
+    places = {"1er": 1, "2e": 2, "3e": 3}
+    resultats = {1: [], 2: [], 3: []}
+    for col, place in places.items():
+        mask = df[col].str.lower() == pseudo
+        jeux = df.loc[mask, "jeu"].tolist()
+        resultats[place].extend(jeux)
+    return resultats
+
+def chercher_resultats_double(df, pseudo):
+    colonnes = {"gagnant(e)": "Gagnant", "finaliste(s)": "Finaliste", "semi-finaliste(s)": "Demi-finaliste"}
+    resultats = {v: [] for v in colonnes.values()}
+    for col, nom_resultat in colonnes.items():
+        mask = df[col].str.lower() == pseudo
+        jeux = df.loc[mask, "jeu"].tolist()
+        resultats[nom_resultat].extend(jeux)
+    return resultats
 
 st.title(PROGRAM_NAME)
 
@@ -37,10 +54,6 @@ if pseudo:
     df_stats = charger_stats_principales()
     if df_stats is None:
         st.error("Impossible de charger les statistiques principales.")
-        st.stop()
-
-    if "joueurs" not in df_stats.columns:
-        st.error("Colonne 'joueurs' manquante dans stats principales.")
         st.stop()
 
     joueur = df_stats[df_stats["joueurs"].str.lower() == pseudo]
@@ -53,37 +66,33 @@ if pseudo:
     st.write(f"Position globale : {int(joueur.iloc[0]['rang'])} / {df_stats['joueurs'].nunique()}")
     st.write(f"Tournois joués : {int(joueur.iloc[0]['nb de participations'])}")
 
-    # Charger feuilles Google Sheets
     df_suisse = charger_feuille(gid=0)
     df_elim = charger_feuille(gid=344099596)
 
-    # Vérifier présence colonne 'joueur' dans chaque df
-    if "joueur" not in df_suisse.columns:
-        st.error("Colonne 'joueur' manquante dans mode suisse.")
+    st.subheader("Mode Suisse")
+    if not df_suisse.empty:
+        resultats_suisse = chercher_places_suisse(df_suisse, pseudo)
+        for place in [1, 2, 3]:
+            jeux = resultats_suisse[place]
+            if jeux:
+                emojis = {1:"🥇", 2:"🥈", 3:"🥉"}
+                st.write(f"{emojis[place]} Position {place} à : {', '.join(jeux)}")
+        if not any(resultats_suisse.values()):
+            st.info("Pas de résultats trouvés en mode suisse.")
     else:
-        df_suisse_joueur = df_suisse[df_suisse["joueur"].str.lower() == pseudo]
-        st.subheader("Mode Suisse")
-        if not df_suisse_joueur.empty:
-            for place in [1, 2, 3]:
-                jeux = df_suisse_joueur[df_suisse_joueur["position"] == place]["jeu"].tolist()
-                if jeux:
-                    emojis = {1:"🥇", 2:"🥈", 3:"🥉"}
-                    st.write(f"{emojis[place]} Position {place} à : {', '.join(jeux)}")
-        else:
-            st.info("Pas de résultats en mode suisse.")
+        st.info("Données mode suisse vides.")
 
-    if "joueur" not in df_elim.columns:
-        st.error("Colonne 'joueur' manquante dans double élimination.")
+    st.subheader("Double élimination")
+    if not df_elim.empty:
+        resultats_elim = chercher_resultats_double(df_elim, pseudo)
+        for nom, jeux in resultats_elim.items():
+            if jeux:
+                emojis = {"Gagnant":"🏆", "Finaliste":"🎯", "Demi-finaliste":"🏅"}
+                st.write(f"{emojis[nom]} {nom} à : {', '.join(jeux)}")
+        if not any(resultats_elim.values()):
+            st.info("Pas de résultats trouvés en double élimination.")
     else:
-        df_elim_joueur = df_elim[df_elim["joueur"].str.lower() == pseudo]
-        st.subheader("Double élimination")
-        if not df_elim_joueur.empty:
-            for res in ["gagnant", "finaliste", "demi-finaliste"]:
-                jeux = df_elim_joueur[df_elim_joueur["résultat"].str.lower() == res]["jeu"].tolist()
-                if jeux:
-                    emojis = {"gagnant":"🏆", "finaliste":"🎯", "demi-finaliste":"🏅"}
-                    st.write(f"{emojis[res]} {res.capitalize()} à : {', '.join(jeux)}")
-        else:
-            st.info("Pas de résultats en double élimination.")
+        st.info("Données double élimination vides.")
+
 else:
     st.info("Entre un pseudo pour voir les résultats.")

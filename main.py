@@ -22,7 +22,8 @@ def charger_feuille(gid):
     try:
         df = pd.read_csv(url)
         df.columns = df.columns.str.strip().str.lower()
-        st.write(f"Colonnes chargées pour gid={gid} :", df.columns.tolist())
+        # Ligne suivante supprimée pour ne pas afficher les colonnes chargées
+        # st.write(f"Colonnes chargées pour gid={gid} :", df.columns.tolist())
         return df
     except Exception as e:
         st.error(f"Erreur chargement feuille gid={gid}: {e}")

@@ -56,6 +56,12 @@ def chercher_resultats_double(df, pseudo):
 
 st.title(PROGRAM_NAME)
 
+with st.expander("🔧 Admin"):
+    if st.button("🔁 Recharger les données (vider le cache)"):
+        st.cache_data.clear()
+        st.success("Cache vidé. Rechargement...")
+        st.experimental_rerun()
+
 pseudo = st.text_input("Entre ton pseudo").strip().lower()
 
 if pseudo:

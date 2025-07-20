@@ -70,15 +70,16 @@ if pseudo:
         st.error("Impossible de charger les statistiques principales.")
         st.stop()
 
-    joueur = df_stats[df_stats["joueurs"].str.lower() == pseudo]
-    if joueur.empty:
-        st.warning("Pseudo non trouvé.")
+    st.subheader("Recherche dans les tournois (Mode Suisse et Élimination)")
+
+    resultats_suisse = chercher_places_suisse(df_stats, pseudo)
+    total_participations = sum(len(jeux) for jeux in resultats_suisse.values())
+
+    if total_participations == 0:
+        st.warning("Pseudo non trouvé dans les résultats.")
         st.stop()
 
-    st.subheader("Résumé général")
-    st.write(f"Points total : {int(joueur.iloc[0]['total de points'])}")
-    st.write(f"Position globale : {int(joueur.iloc[0]['rang'])} / {df_stats['joueurs'].nunique()}")
-    st.write(f"Tournois joués : {int(joueur.iloc[0]['nb de participations'])}")
+    st.write(f"Tournois joués : {total_participations}")
 
     df_suisse = charger_feuille(gid=0)
     df_elim = charger_feuille(gid=344099596)

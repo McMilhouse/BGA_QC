@@ -69,11 +69,13 @@ if pseudo:
 
     # --- Classement global des participations ---
     st.subheader("Classement global des participations")
-    tous_joueurs = df_classement["joueurs"].dropna().str.strip().str.lower().tolist()
+    # On normalise et on retire doublons
+    tous_joueurs = df_classement["joueurs"].dropna().str.strip().str.lower().unique()
     total_joueurs = len(tous_joueurs)
 
-    if pseudo in tous_joueurs:
-        rank = tous_joueurs.index(pseudo) + 1
+    pseudo_lower = pseudo.lower()
+    if pseudo_lower in tous_joueurs:
+        rank = list(tous_joueurs).tolist().index(pseudo_lower) + 1
         st.write(f"Tu es {rank}e sur {total_joueurs} joueurs au classement.")
     else:
         st.info("Pseudo non trouvé dans le classement global.")
@@ -100,4 +102,7 @@ if pseudo:
         if jeux:
             st.write(f"{emojis_elim[nom]} {nom} à : {', '.join(jeux)}")
     if not any(resultats_elim.values()):
-        st.info("Pas de résultats trouvés en double élim
+        st.info("Pas de résultats trouvés en double élimination.")
+
+else:
+    st.info("Entre un pseudo pour voir les résultats.")

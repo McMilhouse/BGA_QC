@@ -1,31 +1,68 @@
-Tournois,Jeu,Édition,Date,Nb Participants,Champion précédent,1er,2e,3e,4e,5e,6e,7e,8e,Meilleur score
-1,Cardiceo,1ère,3 janvier,20,x,jesuislusshouse/vjcalypso,Navet bleu,bergeronfrancis,mat88,Amy_Kenobi/HelzeytheQueen,Nadou8,Midi et demi/Anakena,Red_Mary/Falbo11/guiguilemeilleur,X
-2,Can't Stop Express,1ère,10 janvier,20,x,Tholmir/Das Burndt,Raccoon974,red_mary,Genevieve D,mat88/Falbo11/McMilhouse/Anakena/bergeronfrancis,jesuislusshouse,ArcaGraph/Nadou8,guiguilemeilleur/Midi et demi,jesuislusshouse - 630pts
-3,Odin,1ère,17 janvier,20,x,mat88,jesuislusshouse,guiguilemeilleur/Nadou8,eztech,Magic11/Tholmir,melsy/Falbo11,Fortiche1,Boum100/Midi et demi,X
-4,7 Wonders Architects,1ère,24 janvier,24,x,Cathou/guiguilemeilleur,Nadou8,pogo_007_,Marieve/CatLRche,Raccoon974/bergeronfrancis,red_mary/jesuislusshouse/Khalyus,19max91/Olibou/McMilhouse,mat88/melsy,pogo_007_ - 53pts
-5,Gizmos,1ère,31 janvier,20,x,Zoorim,bergeronfrancis,mat88,guiguilemeilleur/marieve,pogo_007_/Magic11,Tholmir,genevieve D/Qcgoofbal/Midi et demi,Munuo,guiguilmeilleur - 48pts
-6,Martian Dice,1ère,7 février,20,x,McMilhouse/Francis_/mat88/Boum100/Nadou8,Munuo,bergeronfrancis,Anekena/jesuislusshouse,GabrielCL/Tholmir/Paupiette88,Nhemo/Midi et demi,guiguilemeilleur/Raccoon974,Qcgoofbal/Gramor40,McMilhouse - 33pts
-7,Next Station: Paris,1ère,14 février,17,x,guiguilemeilleur,Magic11/Raccoon974,mat88,Gramor40,red_mary,McMilhouse/Tholmir,jesuislusshouse/Genevieve D,Nhemo,guiguilemeilleur/mat88 - 223pts
-8,Space Base,2e,21 février,22,Francis_,Olibou,guiguilemeilleur,Zoorim,Fortiche1/Munuo/mat88/LeDitGabil,jesuislusshouse,bergeronfrancis,Genevieve D/Midi et demi/Magic11,red_mary/McMilhouse,jesuislusshouse - 58pts
-9,Draftosaurus,2e,28 février,21,guiguilemeilleur,bergeronfrancis,19max91,redsuit_guy,Raccoon974/CamN8/Munuo,jesuislusshouse/melsy/Genevieve D/Magic11,Izotope,mat88,Midi et demi/Gramor40/Anakena,Raccoon974 - 44pts
-10,Tiny Farms,1ère,7 mars,18,x,crazy_hummingbird,mat88,Munuo,red_mary/bergeronfrancis,Midi et demi/Robd01,Tholmir,Raccoon974/guiguilemeilleur,GabrielCL,Raccoon974/Robd01 - 74pts
-11,Potion Explosion,1ère,14 mars,22,x,guiguilemeilleur,Spix_Qc,melsy,red_mary,P0oLLuXxXxX,Midi et demi,Tholmir,Genevieve D,Nadou8 - 99pts
-12,Sea Salt & Paper,2e,21 mars,23,Zoorim,19max91,Raccoon974/Zoorim,mat88,Gramor40,Nadou8,bergeronfrancis,Francis_/Midi et demi,Genevieve D,mat88 - 43pts
-13,Dice Hospital: ER - Emergency Roll,1ère,28 mars,23,x,GabrielCL,Munuo,mat88,bergeronfrancis/EricF81,red_mary/Tholmir,Magic11/McMilhouse,Francis_,HelzeytheQueen/Erickzoo1978,Magic11 - 117pts
-14,Dés Pirates,1ère,4 avril,22,x,Nadou8,Midi et demi,jesuislusshouse,GabrielCL/Crazy_Hummingbird,Zoorim/Falbo11,bergeronfrancis/Gramor40,Francis_/Erickzoo1978/mat88/Terminatersam,Tholmir/McMilhouse,bergeronfrancis - 8600pts
-15,Mountain Goats,1ère,11 avril,28,x,Yzotope/Gramor40,Genevieve D/Tholmir,Midi et demi,Crazy_Hummingbird/bergeronfrancis/Munuo,Jessoya/pogo_007_,Nhemo,Magic11/Terminatersam/Zoorim/Qcgoofbal,funnysteph18/mat88/guiguilemeilleur,Munuo - 133pts
-16,Happy City,2e,18 avril,12,Tibaz10,Terminatersam,HelzeytheQueen,jesuislusshouse,Magic11,guiguilemeilleur,McMilhouse,mat88/red_mary,Zoorim,HelzeytheQueen/jesuilusshouse/Zoorim/Terminatersam - 56pts
-17,Romi Rami,2e,25 avril,21,Malorick,mat88/Spix_Qc,19max91/bergeronfrancis,guiguilemeilleur,Erickzoo1978,munuo/GabrielCL/red_mary,Midi et demi,Navet bleu/Anakena/melsy,Gramor40,guiguilemeilleur - 51pts
-18,Loco Momo,2e,2 mai,17,mat88,HelzeytheQueen/Raccoon974,Spix_Qc,Magic11,guiguilemeilleur/McMilhouse/Midi et demi,mat88,Genevieve D/bergeronfrancis,Falbo11,Marieve/Tholmir,Falbo11/Genevieve D/HelzeytheQueen - 81pts
-19,My City: Roll & Build,1ère,9 mai,24,x,,,,,,,,,
-20,Pixies,1ère,16 mai,29,x,,,,,,,,,
-21,Welcome to,2e,23 mai,29,19max91,,,,,,,,,
-22,Trek 12,1ère,30 mai,28,x,,,,,,,,,
-23,Go Nuts for Donuts,2e,6 juin,22,McMilhouse/Qcgoofbal,,,,,,,,,
-24,Buttons,2e,13 juin,22,bergeronfrancis,,,,,,,,,
-25,Lure,1ère,20 juin,21,x,,,,,,,,,
-26,Sushi Go Party,2e,27 juin,,jesuislusshouse,,,,,,,,,
-27,Go Goa,1ère,4 juillet,,x,,,,,,,,,
-28,Dog Lover,1ère,11 juillet,,x,,,,,,,,,
-29,Boomerang Europe,1ère,18 juillet,,x,,,,,,,,,
-30,Troyes Dice,1ère,25 juillet,,x,,,,,,,,,
+Joueurs,Nb de participations,Total de points,Rang,1ère place,2e place,3e place,5e à 8e place,Victoire,Finale,Demi-Finale,Quart de finale
+mat88,29,168,1,3,1,4,9,0,4,2,4
+bergeronfrancis,27,157,2,1,2,2,9,1,5,1,2
+guiguilemeilleur,26,122,3,3,1,2,8,0,1,2,5
+jesuislusshouse,27,111,4,1,1,2,6,0,1,5,4
+red_mary,23,108,5,0,0,1,9,3,1,2,3
+Midi et demi,29,103,6,0,1,1,12,1,2,1,6
+McMilhouse,29,93,7,1,0,0,8,0,3,3,4
+Genevieve D,24,86,8,0,1,0,8,0,2,3,3
+Nadou8,15,61,9,2,1,1,3,0,0,0,3
+Magic11,13,58,10,0,1,1,7,0,0,2,0
+Raccoon974,14,57,11,1,3,0,4,0,0,0,0
+Spix_Qc,7,56,12,1,2,0,0,1,0,2,0
+GabrielCL,11,53,13,1,0,0,4,0,1,2,1
+Munuo,12,52,14,0,2,1,5,0,0,0,0
+Tholmir,16,50,16,1,1,0,9,0,0,0,0
+Zoorim,7,50,15,1,1,1,3,1,0,0,0
+Fortiche1,6,47,17,0,0,0,2,2,0,1,0
+19max91,5,43,18,1,2,0,1,0,1,0,0
+HelzeytheQueen,9,43,19,1,1,0,2,0,0,1,3
+Crazy_Hummingbird,11,36,21,1,0,0,2,0,0,0,4
+Gramor40,13,36,22,1,0,0,6,0,0,0,2
+Navet bleu,6,36,20,0,1,0,1,1,1,0,1
+P0oLLuXxXxX,4,35,23,0,0,0,1,1,2,0,0
+Erickzoo1978,13,33,24,0,0,0,3,0,1,2,1
+Falbo11,14,31,25,0,0,0,5,0,0,0,5
+Marieve,7,28,27,0,0,0,3,0,0,2,1
+melsy,14,28,28,0,0,1,4,0,0,1,1
+Terminatersam,5,28,26,1,0,0,2,0,1,0,1
+Qcgoofbal,14,24,29,0,0,0,3,0,0,1,4
+Das Burndt,2,21,30,1,0,0,0,0,1,0,0
+target1plus,6,21,32,0,0,0,0,0,1,1,2
+Yzotope,3,21,31,1,0,0,0,0,0,1,0
+EricF81,4,18,33,0,0,0,1,0,1,0,1
+Francis_,4,18,33,1,0,0,3,0,0,0,0
+pogo_007_,6,18,35,0,0,1,2,0,0,0,0
+Anakena,13,16,36,0,0,0,4,0,0,0,0
+CamN8,2,15,37,0,0,0,1,0,1,0,0
+Marmont,3,15,38,0,0,0,0,0,1,0,2
+Olibou,2,14,39,1,0,0,1,0,0,0,0
+Boum100,3,13,40,1,0,0,1,0,0,0,0
+Cathou,3,12,41,1,0,0,0,0,0,0,0
+Eztech,8,12,43,0,0,0,1,0,0,0,2
+vjcalypso,4,12,42,1,0,0,0,0,0,0,0
+1zabe11e,4,9,44,0,0,0,0,0,0,1,1
+redsuit_guy,2,8,45,0,0,1,0,0,0,0,0
+Nhemo,5,7,46,0,0,0,3,0,0,0,0
+CatLRche,1,6,47,0,0,0,1,0,0,0,0
+jasusmannn,1,6,47,0,0,0,0,0,0,1,0
+LeDitGabil,1,6,47,0,0,0,1,0,0,0,0
+Rougegirl,1,6,47,0,0,0,0,0,0,1,0
+tibaz10,2,6,51,0,0,0,0,0,0,0,2
+Amy_Kenobi,5,5,55,0,0,0,1,0,0,0,0
+Jessoya,2,5,52,0,0,0,1,0,0,0,0
+Paupiette88,4,5,54,0,0,0,1,0,0,0,0
+Robd01,3,5,53,0,0,0,1,0,0,0,0
+Dany Tessier,3,3,58,0,0,0,0,0,0,0,1
+Khalyus,1,3,56,0,0,0,1,0,0,0,0
+Malorick,1,3,56,0,0,0,0,0,0,0,1
+ArcaGraph,1,2,59,0,0,0,1,0,0,0,0
+funnysteph18,1,1,60,0,0,0,1,0,0,0,0
+Bliknook,1,0,61,0,0,0,0,0,0,0,0
+JulieRivNor,2,0,67,0,0,0,0,0,0,0,0
+Moe71,1,0,61,0,0,0,0,0,0,0,0
+Mr Boudro,1,0,61,0,0,0,0,0,0,0,0
+Nanzy71,1,0,61,0,0,0,0,0,0,0,0
+TherryCloutier,1,0,61,0,0,0,0,0,0,0,0
+FernyD,1,0,61,0,0,0,0,0,0,0,0

@@ -3,6 +3,7 @@ import pandas as pd
 
 PROGRAM_NAME = "Statistiques des tournois BGA"
 
+# --- Fonctions ---
 @st.cache_data(ttl=600)
 def charger_onglet(sheet_name):
     try:
@@ -66,18 +67,17 @@ if pseudo:
         st.error("Impossible de charger les données.")
         st.stop()
 
-    # --- Classement global des participations ---
+    # --- Classement global basé sur la colonne 'rang' ---
     st.subheader("Classement global des participations")
-    tous_joueurs = []
-    for cell in df_classement["joueurs"].dropna():
-        tous_joueurs.extend(normaliser_joueurs(cell))
     pseudo_lower = pseudo.lower()
-    unique_joueurs = list(dict.fromkeys(tous_joueurs))  # ordre + suppression doublons
-    total_joueurs = len(unique_joueurs)
-    if pseudo_lower in unique_joueurs:
-        rank = unique_joueurs.index(pseudo_lower) + 1
-        st.write(f"Tu es {rank}e sur {total_joueurs} joueurs au classement.")
-    else:
+    trouve = False
+    for idx, row in df_classement.iterrows():
+        joueurs_cell = normaliser_joueurs(row["joueurs"])
+        if pseudo_lower in joueurs_cell:
+            st.write(f"Tu es {row['rang']}e sur {len(df_classement)} joueurs au classement.")
+            trouve = True
+            break
+    if not trouve:
         st.info("Pseudo non trouvé dans le classement global.")
 
     # --- Mode Suisse ---

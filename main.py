@@ -4,7 +4,6 @@ import pandas as pd
 PROGRAM_NAME = "Statistiques des tournois BGA"
 
 
-# --- Fonctions ---
 @st.cache_data(ttl=600)
 def charger_onglet(sheet_name):
     try:
@@ -17,10 +16,8 @@ def charger_onglet(sheet_name):
 
 
 def normaliser_joueurs(cell):
-    """Retourne la liste des pseudos, insensible à la casse"""
     if pd.isna(cell):
         return []
-    # Remplacer ; ou , par /
     noms = str(cell).replace(';', '/').replace(',', '/').split('/')
     return [p.strip().lower() for p in noms]
 
@@ -66,9 +63,9 @@ with st.expander("🔧 Admin"):
 pseudo = st.text_input("Entre ton pseudo").strip().lower()
 
 if pseudo:
-    # --- Charger tous les onglets ---
-    df_suisse = charger_onglet("Mode Suisse")
-    df_elim = charger_onglet("Double élimination")
+    # --- Charger les onglets ---
+    df_suisse = charger_onglet("Suisse")
+    df_elim = charger_onglet("Double")
 
     if df_suisse is None or df_elim is None:
         st.error("Impossible de charger les données.")
@@ -78,7 +75,6 @@ if pseudo:
     st.subheader("Classement global des participations")
     colonnes_places = ['1er', '2e', '3e', '4e', '5e', '6e', '7e', '8e']
 
-    # Combiner toutes les participations de Mode Suisse
     toutes_participations = pd.Series(
         df_suisse[colonnes_places].stack()
         .dropna()

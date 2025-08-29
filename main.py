@@ -61,31 +61,22 @@ if pseudo:
     # --- Charger les onglets ---
     df_suisse = charger_onglet("Suisse")
     df_elim = charger_onglet("Double")
-    df_classement = charger_onglet("Classement")  # si tu veux utiliser cet onglet pour le classement global
+    df_classement = charger_onglet("Classement")
 
-    if df_suisse is None or df_elim is None:
+    if df_suisse is None or df_elim is None or df_classement is None:
         st.error("Impossible de charger les données.")
         st.stop()
 
     # --- Classement global des participations ---
     st.subheader("Classement global des participations")
-    colonnes_places = ['1er','2e','3e','4e','5e','6e','7e','8e']
+    tous_joueurs = df_classement["joueurs"].dropna().str.strip().str.lower().tolist()
+    total_joueurs = len(tous_joueurs)
 
-    toutes_participations = pd.Series(
-        df_suisse[colonnes_places].stack()
-        .dropna()
-        .apply(normaliser_joueurs)
-        .sum()
-    )
-    joueurs_uniques = toutes_participations.unique()
-    total_joueurs = len(joueurs_uniques)
-    joueurs_counts = toutes_participations.value_counts()
-
-    if pseudo in joueurs_counts:
-        rank = joueurs_counts.rank(ascending=False, method='min')[pseudo]
-        st.write(f"Tu es {int(rank)}e sur {total_joueurs} joueurs au classement.")
+    if pseudo in tous_joueurs:
+        rank = tous_joueurs.index(pseudo) + 1
+        st.write(f"Tu es {rank}e sur {total_joueurs} joueurs au classement.")
     else:
-        st.info("Pseudo non trouvé dans les participations.")
+        st.info("Pseudo non trouvé dans le classement global.")
 
     # --- Mode Suisse ---
     st.subheader("Mode Suisse")
@@ -109,7 +100,4 @@ if pseudo:
         if jeux:
             st.write(f"{emojis_elim[nom]} {nom} à : {', '.join(jeux)}")
     if not any(resultats_elim.values()):
-        st.info("Pas de résultats trouvés en double élimination.")
-
-else:
-    st.info("Entre un pseudo pour voir les résultats.")
+        st.info("Pas de résultats trouvés en double élim

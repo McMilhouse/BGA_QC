@@ -81,61 +81,55 @@ with st.expander("🔧 Admin"):
         st.success("Cache vidé. Rechargement...")
         st.experimental_rerun()
 
-# --- Upload du fichier Excel ---
-uploaded_file = st.file_uploader("📥 Téléverse ton fichier BGA (.xlsx)", type=["xlsx"])
+pseudo = st.text_input("Entre ton pseudo").strip()
 
-if uploaded_file:
-    pseudo = st.text_input("Entre ton pseudo").strip()
+if pseudo:
+    df_stats = charger_stats_principales_xlsx("data/BGA.xlsx")
+    if df_stats is None:
+        st.error("Impossible de charger les statistiques principales.")
+        st.stop()
 
-    if pseudo:
-        df_stats = charger_stats_principales_xlsx(uploaded_file)
-        if df_stats is None:
-            st.error("Impossible de charger les statistiques principales.")
-            st.stop()
+    st.subheader("Recherche dans les tournois (Mode Suisse et Élimination)")
 
-        st.subheader("Recherche dans les tournois (Mode Suisse et Élimination)")
+    # Résultats suisses
+    resultats_suisse = chercher_places_suisse_flexible(df_stats, pseudo)
+    total_participations = sum(len(jeux) for jeux in resultats_suisse.values())
+    if total_participations == 0:
+        st.warning("Pseudo non trouvé dans les résultats.")
+        st.stop()
 
-        # Résultats suisses
-        resultats_suisse = chercher_places_suisse_flexible(df_stats, pseudo)
-        total_participations = sum(len(jeux) for jeux in resultats_suisse.values())
-        if total_participations == 0:
-            st.warning("Pseudo non trouvé dans les résultats.")
-            st.stop()
+    st.write(f"Tournois joués : {total_participations}")
 
-        st.write(f"Tournois joués : {total_participations}")
+    # Classement global
+    df_global = classement_global(df_stats)
+    ligne_joueur = df_global[df_global["pseudo"] == normaliser_texte(pseudo)]
+    if not ligne_joueur.empty:
+        ton_rang = int(ligne_joueur.iloc[0]["rang"])
+        nb_joueurs = df_global.shape[0]
+        st.success(f"🎖️ Tu es **{ton_rang}ᵉ sur {nb_joueurs} joueurs** au classement général des participations")
 
-        # Classement global
-        df_global = classement_global(df_stats)
-        ligne_joueur = df_global[df_global["pseudo"] == normaliser_texte(pseudo)]
-        if not ligne_joueur.empty:
-            ton_rang = int(ligne_joueur.iloc[0]["rang"])
-            nb_joueurs = df_global.shape[0]
-            st.success(f"🎖️ Tu es **{ton_rang}ᵉ sur {nb_joueurs} joueurs** au classement général des participations")
+    # Mode Suisse
+    st.subheader("Mode Suisse")
+    emojis_suisse = {1:"🥇", 2:"🥈", 3:"🥉", 4:"4️⃣", 5:"5️⃣", 6:"6️⃣", 7:"7️⃣", 8:"8️⃣"}
+    positions_texte_suisse = {
+        1: "1ère position", 2: "2e position", 3: "3e position", 4: "4e position",
+        5: "5e position", 6: "6e position", 7: "7e position", 8: "8e position"
+    }
+    for place in range(1, 9):
+        jeux = resultats_suisse.get(place, [])
+        if jeux:
+            st.write(f"{emojis_suisse.get(place, '')} {positions_texte_suisse.get(place, str(place)+'e')} à : {', '.join(jeux)}")
+    if not any(resultats_suisse.values()):
+        st.info("Pas de résultats trouvés en mode suisse.")
 
-        # Mode Suisse
-        st.subheader("Mode Suisse")
-        emojis_suisse = {1:"🥇", 2:"🥈", 3:"🥉", 4:"4️⃣", 5:"5️⃣", 6:"6️⃣", 7:"7️⃣", 8:"8️⃣"}
-        positions_texte_suisse = {
-            1: "1ère position", 2: "2e position", 3: "3e position", 4: "4e position",
-            5: "5e position", 6: "6e position", 7: "7e position", 8: "8e position"
-        }
-        for place in range(1, 9):
-            jeux = resultats_suisse.get(place, [])
-            if jeux:
-                st.write(f"{emojis_suisse.get(place, '')} {positions_texte_suisse.get(place, str(place)+'e')} à : {', '.join(jeux)}")
-        if not any(resultats_suisse.values()):
-            st.info("Pas de résultats trouvés en mode suisse.")
-
-        # Double élimination
-        st.subheader("Double élimination")
-        resultats_elim = chercher_resultats_double_flexible(df_stats, pseudo)
-        emojis_elim = {"Gagnant":"🏆", "Finaliste":"🎯", "Demi-finaliste":"🏅", "Quart-finaliste":"🔶"}
-        for nom, jeux in resultats_elim.items():
-            if jeux:
-                st.write(f"{emojis_elim.get(nom, '')} {nom} à : {', '.join(jeux)}")
-        if not any(resultats_elim.values()):
-            st.info("Pas de résultats trouvés en double élimination.")
-    else:
-        st.info("Entre un pseudo pour voir les résultats.")
+    # Double élimination
+    st.subheader("Double élimination")
+    resultats_elim = chercher_resultats_double_flexible(df_stats, pseudo)
+    emojis_elim = {"Gagnant":"🏆", "Finaliste":"🎯", "Demi-finaliste":"🏅", "Quart-finaliste":"🔶"}
+    for nom, jeux in resultats_elim.items():
+        if jeux:
+            st.write(f"{emojis_elim.get(nom, '')} {nom} à : {', '.join(jeux)}")
+    if not any(resultats_elim.values()):
+        st.info("Pas de résultats trouvés en double élimination.")
 else:
-    st.info("Téléverse ton fichier Excel pour commencer.")
+    st.info("Entre un pseudo pour voir les résultats.")

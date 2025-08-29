@@ -22,10 +22,10 @@ def normaliser_joueurs(cell):
 def chercher_places_suisse(df, pseudo):
     places = ["1er", "2e", "3e", "4e", "5e", "6e", "7e", "8e"]
     resultats = {i: [] for i in range(1, 9)}
-    pseudo = pseudo.lower()
+    pseudo_lower = pseudo.lower()
     for idx, col in enumerate(places, 1):
         if col in df.columns:
-            mask = df[col].apply(lambda x: pseudo in normaliser_joueurs(x))
+            mask = df[col].apply(lambda x: pseudo_lower in normaliser_joueurs(x))
             jeux = df.loc[mask, "jeu"].tolist()
             resultats[idx].extend(jeux)
     return resultats
@@ -38,10 +38,10 @@ def chercher_resultats_double(df, pseudo):
         "quart-finaliste(s)": "Quart-finaliste"
     }
     resultats = {v: [] for v in colonnes.values()}
-    pseudo = pseudo.lower()
+    pseudo_lower = pseudo.lower()
     for col, nom_resultat in colonnes.items():
         if col in df.columns:
-            mask = df[col].apply(lambda x: pseudo in normaliser_joueurs(x))
+            mask = df[col].apply(lambda x: pseudo_lower in normaliser_joueurs(x))
             jeux = df.loc[mask, "jeu"].tolist()
             resultats[nom_resultat].extend(jeux)
     return resultats
@@ -58,7 +58,6 @@ with st.expander("🔧 Admin"):
 pseudo = st.text_input("Entre ton pseudo").strip().lower()
 
 if pseudo:
-    # --- Charger les onglets ---
     df_suisse = charger_onglet("Suisse")
     df_elim = charger_onglet("Double")
     df_classement = charger_onglet("Classement")
@@ -69,12 +68,14 @@ if pseudo:
 
     # --- Classement global des participations ---
     st.subheader("Classement global des participations")
-    tous_joueurs = df_classement["joueurs"].dropna().str.strip().str.lower().tolist()
-    total_joueurs = len(tous_joueurs)
-
+    tous_joueurs = []
+    for cell in df_classement["joueurs"].dropna():
+        tous_joueurs.extend(normaliser_joueurs(cell))
     pseudo_lower = pseudo.lower()
-    if pseudo_lower in tous_joueurs:
-        rank = tous_joueurs.index(pseudo_lower) + 1
+    unique_joueurs = list(dict.fromkeys(tous_joueurs))  # ordre + suppression doublons
+    total_joueurs = len(unique_joueurs)
+    if pseudo_lower in unique_joueurs:
+        rank = unique_joueurs.index(pseudo_lower) + 1
         st.write(f"Tu es {rank}e sur {total_joueurs} joueurs au classement.")
     else:
         st.info("Pseudo non trouvé dans le classement global.")

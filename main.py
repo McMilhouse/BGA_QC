@@ -69,7 +69,6 @@ if pseudo:
 
     # --- Classement global des participations ---
     st.subheader("Classement global des participations")
-    # On normalise et on retire doublons
     tous_joueurs = df_classement["joueurs"].dropna().str.strip().str.lower().unique()
     total_joueurs = len(tous_joueurs)
 

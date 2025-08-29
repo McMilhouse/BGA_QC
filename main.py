@@ -3,7 +3,6 @@ import pandas as pd
 
 PROGRAM_NAME = "Statistiques des tournois BGA"
 
-
 @st.cache_data(ttl=600)
 def charger_onglet(sheet_name):
     try:
@@ -14,13 +13,11 @@ def charger_onglet(sheet_name):
         st.error(f"Erreur chargement onglet {sheet_name}: {e}")
         return None
 
-
 def normaliser_joueurs(cell):
     if pd.isna(cell):
         return []
-    noms = str(cell).replace(';', '/').replace(',', '/').split('/')
+    noms = str(cell).replace(';','/').replace(',','/').split('/')
     return [p.strip().lower() for p in noms]
-
 
 def chercher_places_suisse(df, pseudo):
     places = ["1er", "2e", "3e", "4e", "5e", "6e", "7e", "8e"]
@@ -32,7 +29,6 @@ def chercher_places_suisse(df, pseudo):
             jeux = df.loc[mask, "jeu"].tolist()
             resultats[idx].extend(jeux)
     return resultats
-
 
 def chercher_resultats_double(df, pseudo):
     colonnes = {
@@ -50,7 +46,6 @@ def chercher_resultats_double(df, pseudo):
             resultats[nom_resultat].extend(jeux)
     return resultats
 
-
 # --- Interface ---
 st.title(PROGRAM_NAME)
 
@@ -66,6 +61,7 @@ if pseudo:
     # --- Charger les onglets ---
     df_suisse = charger_onglet("Suisse")
     df_elim = charger_onglet("Double")
+    df_classement = charger_onglet("Classement")  # si tu veux utiliser cet onglet pour le classement global
 
     if df_suisse is None or df_elim is None:
         st.error("Impossible de charger les données.")
@@ -73,7 +69,7 @@ if pseudo:
 
     # --- Classement global des participations ---
     st.subheader("Classement global des participations")
-    colonnes_places = ['1er', '2e', '3e', '4e', '5e', '6e', '7e', '8e']
+    colonnes_places = ['1er','2e','3e','4e','5e','6e','7e','8e']
 
     toutes_participations = pd.Series(
         df_suisse[colonnes_places].stack()
@@ -94,7 +90,7 @@ if pseudo:
     # --- Mode Suisse ---
     st.subheader("Mode Suisse")
     resultats_suisse = chercher_places_suisse(df_suisse, pseudo)
-    emojis_suisse = {1: "🥇", 2: "🥈", 3: "🥉", 4: "4️⃣", 5: "5️⃣", 6: "6️⃣", 7: "7️⃣", 8: "8️⃣"}
+    emojis_suisse = {1:"🥇", 2:"🥈", 3:"🥉", 4:"4️⃣", 5:"5️⃣", 6:"6️⃣", 7:"7️⃣", 8:"8️⃣"}
     positions_texte_suisse = {1: "1ère position", 2: "2e position", 3: "3e position",
                               4: "4e position", 5: "5e position", 6: "6e position",
                               7: "7e position", 8: "8e position"}
@@ -108,7 +104,7 @@ if pseudo:
     # --- Double élimination ---
     st.subheader("Double élimination")
     resultats_elim = chercher_resultats_double(df_elim, pseudo)
-    emojis_elim = {"Gagnant": "🏆", "Finaliste": "🎯", "Demi-finaliste": "🏅", "Quart-finaliste": "🔶"}
+    emojis_elim = {"Gagnant":"🏆", "Finaliste":"🎯", "Demi-finaliste":"🏅", "Quart-finaliste":"🔶"}
     for nom, jeux in resultats_elim.items():
         if jeux:
             st.write(f"{emojis_elim[nom]} {nom} à : {', '.join(jeux)}")

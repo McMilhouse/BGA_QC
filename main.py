@@ -69,12 +69,12 @@ if pseudo:
 
     # --- Classement global des participations ---
     st.subheader("Classement global des participations")
-    tous_joueurs = df_classement["joueurs"].dropna().str.strip().str.lower().unique()
+    tous_joueurs = df_classement["joueurs"].dropna().str.strip().str.lower().tolist()
     total_joueurs = len(tous_joueurs)
 
     pseudo_lower = pseudo.lower()
     if pseudo_lower in tous_joueurs:
-        rank = list(tous_joueurs).tolist().index(pseudo_lower) + 1
+        rank = tous_joueurs.index(pseudo_lower) + 1
         st.write(f"Tu es {rank}e sur {total_joueurs} joueurs au classement.")
     else:
         st.info("Pseudo non trouvé dans le classement global.")

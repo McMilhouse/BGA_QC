@@ -28,19 +28,22 @@ def charger_stats_principales_xlsx(fichier):
         st.error(f"Erreur chargement stats principales: {e}")
         return None
 
-# --- Recherche Mode Suisse (flexible) ---
-def chercher_places_suisse_flexible(df, pseudo):
+# --- Mode Suisse avec ex aequo ---
+def chercher_places_suisse(df, pseudo):
     places_cols = [col for col in df.columns if re.search(r'\b\d+(er|e|ème|ere)?\b', col, re.IGNORECASE)]
     resultats = {}
     pseudo_norm = normaliser_texte(pseudo)
     for idx, col in enumerate(places_cols, 1):
-        mask = df[col].apply(lambda x: pseudo_norm in [normaliser_texte(p) for p in str(x).split('/')])
-        if "jeu" in df.columns:
-            resultats[idx] = df.loc[mask, "jeu"].tolist()
+        jeux = []
+        for i, cell in df[col].dropna().items():
+            joueurs = [normaliser_texte(j) for j in str(cell).split('/')]
+            if pseudo_norm in joueurs and "jeu" in df.columns:
+                jeux.append(df.at[i, "jeu"])
+        resultats[idx] = jeux
     return resultats
 
-# --- Recherche Double élimination (flexible) ---
-def chercher_resultats_double_flexible(df, pseudo):
+# --- Double élimination ---
+def chercher_resultats_double(df, pseudo):
     colonnes = {
         "gagnant": "Gagnant",
         "finaliste": "Finaliste",
@@ -57,20 +60,29 @@ def chercher_resultats_double_flexible(df, pseudo):
                 resultats[nom_resultat].extend(df.loc[mask, "jeu"].tolist())
     return resultats
 
-# --- Classement global ---
-def classement_global(df):
-    colonnes_positions = [col for col in df.columns if re.search(r'\b\d+(er|e|ème|ere)?\b', col, re.IGNORECASE)]
-    participations = {}
-    for col in colonnes_positions:
-        for joueurs in df[col].dropna():
-            for j in str(joueurs).split('/'):
-                j_norm = normaliser_texte(j)
-                if j_norm:
-                    participations[j_norm] = participations.get(j_norm, 0) + 1
-    df_participations = pd.DataFrame(list(participations.items()), columns=["pseudo", "participations"])
-    df_participations = df_participations.sort_values("participations", ascending=False).reset_index(drop=True)
-    df_participations["rang"] = df_participations["participations"].rank(method="min", ascending=False).astype(int)
-    return df_participations
+# --- Nombre total de participations ---
+def compter_participations(df, pseudo):
+    pseudo_norm = normaliser_texte(pseudo)
+    total = 0
+    for col in df.columns:
+        if re.search(r'\b\d+(er|e|ème|ere)?\b', col, re.IGNORECASE):
+            for cell in df[col].dropna():
+                joueurs = [normaliser_texte(j) for j in str(cell).split('/')]
+                if pseudo_norm in joueurs:
+                    total += 1
+    return total
+
+# --- Classement global basé sur l'onglet final, colonne 'joueurs' ---
+def classement_global(df_final):
+    df_final = df_final.dropna(subset=["joueurs"])
+    pseudos = set()
+    for cell in df_final["joueurs"]:
+        for j in str(cell).split('/'):
+            pseudos.add(normaliser_texte(j))
+    df_global = pd.DataFrame(list(pseudos), columns=["pseudo"])
+    df_global = df_global.sort_values("pseudo").reset_index(drop=True)
+    df_global["rang"] = df_global.index + 1
+    return df_global
 
 # --- Interface Streamlit ---
 st.title(PROGRAM_NAME)
@@ -92,21 +104,21 @@ if pseudo:
     st.subheader("Recherche dans les tournois (Mode Suisse et Élimination)")
 
     # Résultats suisses
-    resultats_suisse = chercher_places_suisse_flexible(df_stats, pseudo)
-    total_participations = sum(len(jeux) for jeux in resultats_suisse.values())
+    resultats_suisse = chercher_places_suisse(df_stats, pseudo)
+    total_participations = compter_participations(df_stats, pseudo)
     if total_participations == 0:
         st.warning("Pseudo non trouvé dans les résultats.")
         st.stop()
 
     st.write(f"Tournois joués : {total_participations}")
 
-    # Classement global
-    df_global = classement_global(df_stats)
+    # Classement global (onglet final)
+    df_global = classement_global(df_stats)  # assure-toi que df_stats contient l'onglet final avec 'joueurs'
     ligne_joueur = df_global[df_global["pseudo"] == normaliser_texte(pseudo)]
     if not ligne_joueur.empty:
         ton_rang = int(ligne_joueur.iloc[0]["rang"])
         nb_joueurs = df_global.shape[0]
-        st.success(f"🎖️ Tu es **{ton_rang}ᵉ sur {nb_joueurs} joueurs** au classement général des participations")
+        st.success(f"Tu es {ton_rang}e sur {nb_joueurs} joueurs au classement")
 
     # Mode Suisse
     st.subheader("Mode Suisse")
@@ -124,7 +136,7 @@ if pseudo:
 
     # Double élimination
     st.subheader("Double élimination")
-    resultats_elim = chercher_resultats_double_flexible(df_stats, pseudo)
+    resultats_elim = chercher_resultats_double(df_stats, pseudo)
     emojis_elim = {"Gagnant":"🏆", "Finaliste":"🎯", "Demi-finaliste":"🏅", "Quart-finaliste":"🔶"}
     for nom, jeux in resultats_elim.items():
         if jeux:
